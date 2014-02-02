@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+  <title>Hello Validation</title>
+	<meta name="author" content="Loek van den Ouweland">
+	<meta name="description" content="Solid Validation">
+	<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;" />
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+  <link rel="stylesheet" href="css/html5reset-1.6.1.css?v=1">
+  <link rel="stylesheet" href="css/screen.css?v=1">
+  <script src="js/jquery-1.7.1.min.js"></script>
+  <script src="js/knockout-2.0.0.js"></script>
+  <script src="js/validation/solidvalidation.js"></script>
+  <script type="text/javascript">
+      //<![CDATA[
+      jQuery(function(){
+      	
+      });
+      //]]>
+  </script>
+  </head>
+	<body>
+		<div id="canvas">
+			<div class="form">
+			
+				<div class="inputcontainer" data-bind="css: { error: nameHasError}">
+					<span class="caption">Name</span>
+					<input data-bind="value: name" />
+					<div class="valresult" data-bind="text: nameValidation"></div>
+				</div>
+				
+				<div class="inputcontainer" data-bind="css: { error: salaryHasError}">
+					<span class="caption">Salary</span>
+					<input data-bind="value: salary" type="number" />
+					<div class="valresult" data-bind="text: salaryValidation"></div>
+				</div>
+
+				<div class="inputcontainer" data-bind="css: { error: salaryHasError}">
+					<span class="caption">Salary</span>
+					<input data-bind="value: salary"  />
+					<div class="valresult" data-bind="text: salaryValidation"></div>
+				</div>
+			
+				<div id="toolbar">
+					<button data-bind='click: saveCommand, enable: allowSave'>Save</button>
+				</div> 
+			</div>
+		</div>
+		
+  <script type="text/javascript">
+		var ViewModel = function(name, salary) {
+		    this.name = ko.observable(name);
+		    this.salary = ko.observable(salary);
+		    this.nameHasError=ko.observable(false);
+		    this.salaryHasError=ko.observable(false);
+		 
+		 		this.saveCommand = function() {
+		 			alert('Todo: Save');
+		   	};
+		   
+		    this.nameValidation=ko.computed(function(){
+		    	if (ValidateRequired(this.name())) {
+			    	this.nameHasError(false);
+		    		return "";
+		    	}
+		    	this.nameHasError(true);
+      		return "Please enter a name";
+		    },this);
+
+				this.salaryValidation=ko.computed(function(){
+					if (ValidateSalary(this.salary())) {
+			    	this.salaryHasError(false);
+						return "";
+					}
+		    	this.salaryHasError(true);
+					return "Please enter a valid salary";
+				},this);
+		    
+		    this.hasError=ko.computed(function(){
+		    	return this.nameHasError() || this.salaryHasError();
+		    },this);
+			
+				this.allowSave = ko.computed(function() {
+			   return !this.hasError();
+				}, this);
+  
+
+		};
+		 
+		ko.applyBindings(new ViewModel("Dave", 5674.45)); // This makes Knockout get to work
+	</script>
+	</body>
+</html>
